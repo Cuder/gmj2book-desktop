@@ -6,6 +6,7 @@ import io
 import imghdr
 from urllib.request import urlopen
 import base64
+import zipfile
 
 locale.setlocale(locale.LC_ALL, 'ru_RU.UTF-8')
 
@@ -61,3 +62,19 @@ def get_image(url):
 
 def encode_base64(image):
     return base64.b64encode(image)
+
+
+def archive_book(blog_name):
+    with zipfile.ZipFile('books/%s.zip' % blog_name, mode='w') as zf:
+        try:
+            zf.write('books/%s.fb2' % blog_name, arcname='%s.fb2' % blog_name, compress_type=zipfile.ZIP_DEFLATED)
+        except FileNotFoundError:
+            print("Файл книги не найден.")
+        zf.close()
+
+
+def delete_book(blog_name):
+    try:
+        os.remove("books/%s.fb2" % blog_name)
+    except OSError:
+        pass

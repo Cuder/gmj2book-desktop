@@ -2,6 +2,7 @@ import printing
 import input
 import FB2Functions
 from datetime import datetime
+import globals
 
 if __name__ == '__main__':
     startTime = datetime.now()
@@ -23,4 +24,10 @@ if __name__ == '__main__':
 
     # Создание FB2
     FB2Functions.create_fb2(input_data)
-    printing.indent("Время выполнения: %s." % str(datetime.now()-startTime))
+
+    # Архивирование
+    globals.archive_book(input_data['blog_name'])
+    globals.delete_book(input_data['blog_name'])
+    print("Книга упакована в ZIP-архив.")
+
+    printing.indent("\nВремя выполнения: %s." % str(datetime.now() - startTime))
