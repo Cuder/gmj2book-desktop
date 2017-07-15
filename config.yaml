@@ -1,0 +1,36 @@
+url:
+  ru: http://my.gmj.ru
+  en: http://my.2gmj.com
+public blogs:
+  - интервью
+  - информация
+  - мы
+  - анекдоты
+  - избушка
+  - достало!
+  - курилка
+  - помощь
+  - про это
+  - тех.помощь
+  - топ
+  - третий тайм
+  - центр звука
+  - госреестр
+  - сонник
+  - ассоциации
+  - dtr
+  - softnet
+  - siemens
+document description:
+  title info:
+    genre: nonf_biography
+    match: 100
+    sequence: Блоги GMJ
+  document info:
+    first name: Никита
+    last name: Ковин
+    nickname: Cuder
+    site: http://nikitakovin.ru
+    program name: gmj2book
+    program version: 1.0
+    program site: http://nikitakovin.ru/gmj2book/
