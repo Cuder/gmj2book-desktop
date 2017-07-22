@@ -26,10 +26,10 @@ def create_dir():
 
 
 def russian_date(time):
-    if system() is "Linux":
+    if system() == "Linux":
         locale.setlocale(locale.LC_ALL, 'ru_RU.UTF-8')
         time = time.strftime("%-d %B, %A. %-H:%M")
-    elif system() is "Windows":
+    elif system() == "Windows":
         locale.setlocale(locale.LC_ALL, 'rus_rus')
         time = time.strftime("%#d %B, %A. %#H:%M")
     months = [
