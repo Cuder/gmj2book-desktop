@@ -7,12 +7,11 @@ import imghdr
 from urllib.request import urlopen
 import base64
 import zipfile
-
-locale.setlocale(locale.LC_ALL, 'ru_RU.UTF-8')
+from platform import system
 
 
 def yaml_load():
-    with open("config.yaml", 'r') as stream:
+    with open("config.yaml", "r", encoding="utf-8") as stream:
         try:
             text = yaml.load(stream)
         except yaml.YAMLError as exc:
@@ -27,7 +26,12 @@ def create_dir():
 
 
 def russian_date(time):
-    time = time.strftime("%-d %B, %A. %-H:%M")
+    if system() is "Linux":
+        locale.setlocale(locale.LC_ALL, 'ru_RU.UTF-8')
+        time = time.strftime("%-d %B, %A. %-H:%M")
+    elif system() is "Windows":
+        locale.setlocale(locale.LC_ALL, 'rus_rus')
+        time = time.strftime("%#d %B, %A. %#H:%M")
     months = [
         ("Январь", "января"),
         ("Февраль", "февраля"),

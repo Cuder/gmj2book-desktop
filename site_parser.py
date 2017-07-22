@@ -1,5 +1,5 @@
 import re
-import GMJFunctions
+from GMJFunctions import gmj_time
 import urllib.parse as up
 
 
@@ -100,7 +100,7 @@ def get_post_data(posts, post_number):
     # Заголовок сообщения
     post['title'] = process_post_title(post_table.find("th", {"align": "left"}))
     # Время публикации сообщения
-    post['time'] = GMJFunctions.gmj_time(post_table.find("th", {"align": "right"}).string)
+    post['time'] = gmj_time(post_table.find("th", {"align": "right"}).string)
     # Само сообщение
     post_message = post_table.find("td", {"colspan": "2"})
     # Картинка к сообщению

@@ -1,6 +1,6 @@
 import globals
 import GMJFunctions
-import parser
+import site_parser
 import sys
 import printing
 from lxml import etree as et
@@ -165,12 +165,12 @@ def write_posts(root, parent_section, blog_id, first_page, site, images, coautho
             posts = first_page
         else:
             blog_page = GMJFunctions.get_html(GMJFunctions.get_blog_url(site, blog_id) + "&sidx=" + str(pages_counter))
-            posts = parser.get_posts_table(blog_page)
+            posts = site_parser.get_posts_table(blog_page)
         if posts:
             # Запись постов со страницы
             for x in range(10):
                 # Получаем пост и информацию о нем
-                post = parser.get_post_data(posts, x)
+                post = site_parser.get_post_data(posts, x)
                 if post:
                     if post['author'] == blog_id or post['author'] == coauthor_id:
                         year = post['time'].year

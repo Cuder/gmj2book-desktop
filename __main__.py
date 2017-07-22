@@ -1,8 +1,8 @@
 import printing
 import input
-import FB2Functions
+from FB2Functions import create_fb2
 from datetime import datetime
-import globals
+from globals import archive_book, delete_book
 
 if __name__ == '__main__':
     startTime = datetime.now()
@@ -23,11 +23,11 @@ if __name__ == '__main__':
     input.start_processing()
 
     # Создание FB2
-    FB2Functions.create_fb2(input_data)
+    create_fb2(input_data)
 
     # Архивирование
-    globals.archive_book(input_data['blog_name'])
-    globals.delete_book(input_data['blog_name'])
+    archive_book(input_data['blog_name'])
+    delete_book(input_data['blog_name'])
     print("Книга упакована в ZIP-архив.")
 
     printing.indent("\nВремя выполнения: %s." % str(datetime.now() - startTime))
