@@ -1,0 +1,87 @@
+#kivy 1.0
+
+<WelcomeScreen>
+    GridLayout:
+        cols: 1
+        padding: (10, 0, 10, 10)
+        AsyncImage:
+            source: 'http://my.gmj.ru/img/logo.jpg'
+            size_hint: (1, None)
+            height: 90
+        BoxLayout:
+            padding: (0, 10, 0, 0)
+            size_hint: (1, None)
+            height: 40
+            Label:
+                text: 'Площадка блогов'
+            BoxLayout:
+                SelectSite:
+                    text: 'my.gmj.ru'
+                    state: 'down'
+                    id: site
+                SelectSite:
+                    text: 'my.2gmj.com'
+                    state: 'normal'
+        BoxLayout:
+            padding: (0, 10, 0, 0)
+            size_hint: (1, None)
+            height: 40
+            Label:
+                text: 'Название блога'
+                color: root.blog_name_color
+            TextInput:
+                multiline: False
+                hint_text: 'Например, kollaps'
+                id: blog_name
+        BoxLayout:
+            padding: (0, 10, 0, 0)
+            size_hint: (1, None)
+            height: 40
+            Label:
+                text: 'Вторая учетная запись'
+                color: root.coauthor_name_color
+            TextInput:
+                hint_text: 'Необязательно. Например, KiberPunk'
+                multiline: False
+                id: coauthor_name
+        BoxLayout:
+            padding: (0, 10, 0, 0)
+            size_hint: (1, None)
+            height: 40
+            Label:
+                text: 'Имя автора блога'
+                color: root.real_name_color
+            TextInput:
+                hint_text: 'Необязательно. Например, Юрий'
+                multiline: False
+                id: real_name
+        BoxLayout:
+            padding: (0, 10, 0, 0)
+            size_hint: (1, None)
+            height: 40
+            Label:
+                text: 'Фамилия автора блога'
+                color: root.real_surname_color
+            TextInput:
+                hint_text: 'Необязательно. Например, Овчинников'
+                multiline: False
+                id: real_surname
+        BoxLayout:
+            padding: (0, 10, 0, 30)
+            size_hint: (1, None)
+            height: 70
+            Label:
+                text: 'Включать изображения'
+            CheckBox:
+                active: True
+                id: include_images
+        Label:
+            text: root.error_text
+            size_hint: (1, None)
+            height: 35
+            color: (1, 0.01, 0.01, 1)
+        PressButton:
+            size_hint: (1, None)
+            height: 40
+            text: root.button_text
+            on_release: root.process(site.state, blog_name.text, coauthor_name.text, real_name.text, real_surname.text, include_images.active)

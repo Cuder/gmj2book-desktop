@@ -1,9 +1,3 @@
-def greeting():
-    print("GMJ2Book")
-    print("Сделает книгу в формате FB2 из блога на портале My.GMJ")
-    print("(c) 2017 Nikita Kovin")
-
-
 def indent(message, newline=True):
     if newline is True:
         print("\t", message)
