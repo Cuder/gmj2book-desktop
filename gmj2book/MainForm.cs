@@ -25,9 +25,6 @@ namespace gmj2book
 		        Errors = new List<string[]>(),
 		        BlogName = blogName.Text
 		    };
-		    //blogName.ForeColor = SystemColors.WindowText;
-			//blogName.ForeColor = Color.Red;
-			//MessageBox.Show(t.Blog_name);
 			DisplayErrors(t.Errors);
 		}
 
@@ -67,7 +64,7 @@ namespace gmj2book
 		        RootFolder = Environment.SpecialFolder.MyComputer,
 		        Description = "Выберите путь для сохранения готовой книги."
 		    };
-		    if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+		    if (fbd.ShowDialog() == DialogResult.OK)
 				filePath.Text = fbd.SelectedPath;
 		}
 	}

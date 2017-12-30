@@ -4,8 +4,8 @@ namespace gmj2book
 {
 	public class Task
 	{
-		//bool site_ru=true;
-	    private string _blogName;
+        //bool site_ru=true;
+	    private string _blogName; // имя блога автора
 		public string BlogName
 		{
 			get => _blogName;
@@ -15,19 +15,19 @@ namespace gmj2book
 				{
 					AddError("Введите название блога", "blogName");
 				}
-				else if (CheckInput.ContainsForbiddenChars(value))
-				{
-					AddError("Название блога содержит недопустимые символы", "blogName");
-				}
-				else if (CheckInput.IsDigitsOnly(value))
-				{
-					AddError("Название блога не может состоять из одних цифр", "blogName");
-				}
 				else if (CheckInput.StartsWithDigit(value))
 				{
-					AddError("Название блога не может начинаться на цифру", "blogName");
+				    AddError("Название блога не может начинаться на цифру", "blogName");
 				}
-				if (Errors.Count == 0)
+				else if (CheckInput.ContainsForbiddenChars(value))
+				{
+				    AddError("Название блога содержит недопустимые символы", "blogName");
+				}
+				else if (CheckInput.CyrLatinCharacters(value))
+				{
+				    AddError("Название блога не может содержать одновременно и латинские, и кириллические буквы.", "blogName");
+				}
+                if (Errors.Count == 0)
 				{
 					_blogName = value;
 				}
