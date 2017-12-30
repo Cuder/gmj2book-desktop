@@ -2,31 +2,28 @@
 
 namespace gmj2book
 {
-	/// <summary>
-	/// Description of checkInput.
-	/// </summary>
-	public static class checkInput
+	public static class CheckInput
 	{
-		public static bool isNull(string str)
+		public static bool IsNull(string str)
 		{
 			return str.Length == 0;
 		}
-		public static bool containsForbiddenChars(string str)
+		public static bool ContainsForbiddenChars(string str)
 		{
 			var regexItem = new Regex("^[а-яА-ЯA-Za-z0-9 \\-=_.]*$");
 			return !regexItem.IsMatch(str);
 		}
-		public static bool isDigitsOnly(string str)
+		public static bool IsDigitsOnly(string str)
 		{
-		    foreach (char c in str)
+		    foreach (var c in str)
 		    {
 		    	if (c < '0' || c > '9') return false;
 		    }
 		    return true;
 		}
-		public static bool startsWithDigit(string str)
+		public static bool StartsWithDigit(string str)
 		{
-			char c = str[0];
+			var c = str[0];
 			return char.IsDigit(c);
 		}
 		/* public static bool incorrectFirstChar(string str)

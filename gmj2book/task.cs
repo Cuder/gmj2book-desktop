@@ -2,37 +2,34 @@
 
 namespace gmj2book
 {
-	/// <summary>
-	/// Description of task.
-	/// </summary>
 	public class Task
 	{
 		//bool site_ru=true;
-		string blog_name;
-		public string Blog_name
+	    private string _blogName;
+		public string BlogName
 		{
-			get { return blog_name; }
-			set {
+			get => _blogName;
+		    set {
 				// Проверка имени пользователя
-				if (checkInput.isNull(value))
+				if (CheckInput.IsNull(value))
 				{
 					AddError("Введите название блога", "blogName");
 				}
-				else if (checkInput.containsForbiddenChars(value))
+				else if (CheckInput.ContainsForbiddenChars(value))
 				{
 					AddError("Название блога содержит недопустимые символы", "blogName");
 				}
-				else if (checkInput.isDigitsOnly(value))
+				else if (CheckInput.IsDigitsOnly(value))
 				{
 					AddError("Название блога не может состоять из одних цифр", "blogName");
 				}
-				else if (checkInput.startsWithDigit(value))
+				else if (CheckInput.StartsWithDigit(value))
 				{
 					AddError("Название блога не может начинаться на цифру", "blogName");
 				}
-				if (errors.Count == 0)
+				if (Errors.Count == 0)
 				{
-					blog_name = value;
+					_blogName = value;
 				}
 			}
 		}
@@ -44,15 +41,11 @@ namespace gmj2book
 		//bool include_images=true;
 		//string book_path;
 		//string first_page; // Yet unknown type
-		List<string[]> errors = new List<string[]>();
-		public List<string[]> Errors
+	    public List<string[]> Errors { get; set; } = new List<string[]>();
+
+	    private void AddError(string errorText, string param)
 		{
-			get { return errors; }
-			set { errors = value; }
-		}
-		void AddError(string error_text, string param)
-		{
-			errors.Insert(0, new string[2] { error_text, param });
+			Errors.Insert(0, new string[2] { errorText, param });
 		}
 	}
 }
