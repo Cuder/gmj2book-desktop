@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace gmj2book
 {
@@ -32,16 +33,38 @@ namespace gmj2book
         // Содержит ли имя блога одновременно и кириллические, и латинские символы
 	    public static bool CyrLatinCharacters(string str)
 	    {
-	        return (Regex.IsMatch(str, @"\p{IsCyrillic}") && Regex.IsMatch(str, @"\p{IsBasicLatin}"));
+	        return Regex.IsMatch(str, "[а-яА-Я]") && Regex.IsMatch(str, "[a-zA-Z]");
 	    }
         // Относится ли блог автора к общим
-        // Открыт ли блог автора для чтения
-		/* public static bool incorrectFirstChar(string str)
-		{
-			char c = str[0];
-			var regexItem = new Regex("^[а-яА-ЯA-Za-z]*$");
-			return !regexItem.IsMatch(c);
-		}*/
+	    public static bool IsPublic(string str)
+	    {
+	        string[] publicBlogs =
+	        {
+	            "интервью",
+	            "информация",
+	            "мы",
+	            "анекдоты",
+	            "избушка",
+	            "достало!",
+	            "курилка",
+	            "помощь",
+	            "про это",
+	            "тех.помощь",
+	            "топ",
+	            "третий тайм",
+	            "центр звука",
+	            "госреестр",
+	            "сонник",
+	            "ассоциации",
+	            "dtr",
+	            "softnet",
+	            "siemens"
+            };
+	        return publicBlogs.Contains(str.ToLower());
+	    }
+        // Существует ли блог с таким именем
+	    // Открыт ли блог автора для чтения
+        // Не пустой ли блог автора
 	}
 }
 

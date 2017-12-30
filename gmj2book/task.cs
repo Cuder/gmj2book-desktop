@@ -25,7 +25,11 @@ namespace gmj2book
 				}
 				else if (CheckInput.CyrLatinCharacters(value))
 				{
-				    AddError("Название блога не может содержать одновременно и латинские, и кириллические буквы.", "blogName");
+				    AddError("Название блога не может содержать одновременно и латинские, и кириллические буквы", "blogName");
+				}
+				else if (CheckInput.IsPublic(value))
+				{
+				    AddError("Этот блог в списке общих. Введите название частного блога", "blogName");
 				}
                 if (Errors.Count == 0)
 				{
@@ -33,15 +37,40 @@ namespace gmj2book
 				}
 			}
 		}
-		//ushort blog_id;
-		//string coauthor_name;
-		//ushort coauthor_id;
-		//string real_name;
-		//string real_surname;
-		//bool include_images=true;
-		//string book_path;
-		//string first_page; // Yet unknown type
-	    public List<string[]> Errors { get; set; } = new List<string[]>();
+        //ushort blog_id;
+	    private string _coauthorName; // имя соавтора блога
+	    public string CoauthorName
+	    {
+	        get => _coauthorName;
+	        set
+	        {
+	            if (CheckInput.IsNull(value)) return;
+	            // Проверка имени соавтора блога
+	            if (CheckInput.StartsWithDigit(value))
+	            {
+	                AddError("Название блога не может начинаться на цифру", "coauthorName");
+	            }
+	            else if (CheckInput.ContainsForbiddenChars(value))
+	            {
+	                AddError("Название блога содержит недопустимые символы", "coauthorName");
+	            }
+	            else if (CheckInput.CyrLatinCharacters(value))
+	            {
+	                AddError("Название блога не может содержать одновременно и латинские, и кириллические буквы", "coauthorName");
+	            }
+	            if (Errors.Count == 0)
+	            {
+	                _coauthorName = value;
+	            }
+	        }
+	    }
+        //ushort coauthor_id;
+        //string real_name;
+        //string real_surname;
+        //bool include_images=true;
+        //string book_path;
+        //string first_page; // Yet unknown type
+        public List<string[]> Errors { get; set; } = new List<string[]>();
 
 	    private void AddError(string errorText, string param)
 		{

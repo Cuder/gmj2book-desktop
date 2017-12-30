@@ -14,36 +14,39 @@ namespace gmj2book
 	    private void MainFormLoad(object sender, EventArgs e)
 		{
 			// Действия при запуске приложения
-			filePath.Text = System.AppDomain.CurrentDomain.BaseDirectory;
+			filePath.Text = AppDomain.CurrentDomain.BaseDirectory;
 		}
 
-	    private void TextBox1TextChanged(object sender, EventArgs e)
+	    // Действия по нажатии на кнопку
+        private void TextBox1TextChanged(object sender, EventArgs e)
 		{
-			// Действия по нажатии на кнопку
-		    var t = new Task
+            // Сброс сохраненных ранее сообщений об ошибках
+		    errorProvider1.Clear();
+		    ClearErrorProvider(blogName);
+		    ClearErrorProvider(coauthorName);
+
+            // Инициализация нового задания
+            var t = new Task
 		    {
 		        Errors = new List<string[]>(),
-		        BlogName = blogName.Text
+		        BlogName = blogName.Text,
+                CoauthorName = coauthorName.Text
 		    };
+            // Отображение ошибок, если есть
 			DisplayErrors(t.Errors);
 		}
 
+        // Функция для всплывающих подсказок
 	    private void ToolTip1Popup(object sender, PopupEventArgs e) {}
 
-	    private void DisplayErrors(IReadOnlyCollection<string[]> errors) {
-			if (errors.Count != 0)
-			{
-				foreach (var error in errors)
-				{
-					DisplayError(error[0], error[1]);
-				}
-			}
-			else
-			{
-				errorProvider1.Clear();
-				errorProvider1.SetError(blogName, "");
-			}
-		}
+	    private void DisplayErrors(IReadOnlyCollection<string[]> errors)
+	    {
+	        if (errors.Count == 0) return;
+	        foreach (var error in errors)
+	        {
+	            DisplayError(error[0], error[1]);
+	        }
+	    }
 
 	    private void DisplayError(string error, string param)
 		{
@@ -53,7 +56,8 @@ namespace gmj2book
 					errorProvider1.SetError(blogName, error);
 					break;
 				case "coauthorName":
-					break;
+				    errorProvider1.SetError(coauthorName, error);
+                    break;
 			}
 		}
 
@@ -67,5 +71,11 @@ namespace gmj2book
 		    if (fbd.ShowDialog() == DialogResult.OK)
 				filePath.Text = fbd.SelectedPath;
 		}
+
+	    private void ClearErrorProvider(Control name)
+	    {
+	        errorProvider1.SetIconPadding(name, 7);
+	        errorProvider1.SetError(name, "");
+        }
 	}
 }
