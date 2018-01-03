@@ -61,7 +61,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
@@ -70,6 +69,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -79,10 +79,10 @@
             this.launch.AccessibleName = "";
             this.launch.Cursor = System.Windows.Forms.Cursors.Hand;
             this.launch.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.launch.Location = new System.Drawing.Point(152, 367);
+            this.launch.Location = new System.Drawing.Point(52, 367);
             this.launch.Margin = new System.Windows.Forms.Padding(0);
             this.launch.Name = "launch";
-            this.launch.Size = new System.Drawing.Size(100, 25);
+            this.launch.Size = new System.Drawing.Size(300, 25);
             this.launch.TabIndex = 0;
             this.launch.Text = "Запустить";
             this.launch.UseVisualStyleBackColor = true;
@@ -120,7 +120,7 @@
             this.coauthorName.Name = "coauthorName";
             this.coauthorName.Size = new System.Drawing.Size(190, 20);
             this.coauthorName.TabIndex = 4;
-		    this.toolTip1.SetToolTip(this.coauthorName, "Укажите вторую учетную запись автора блога (необязательно).\nДля этого введите имя пользователя, чьи сообщения в блоге также стоит включить в книгу.\nЭто может понадобиться, например, если автор ведет свой блог с двух учетных записей.");
+            this.toolTip1.SetToolTip(this.coauthorName, resources.GetString("coauthorName.ToolTip"));
             // 
             // realName
             // 
@@ -203,18 +203,6 @@
             // errorProvider1
             // 
             this.errorProvider1.ContainerControl = this;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pictureBox1.Image = global::gmj2book.Resource2.logo;
-            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Padding = new System.Windows.Forms.Padding(0, 25, 0, 0);
-            this.pictureBox1.Size = new System.Drawing.Size(404, 88);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.pictureBox1.TabIndex = 2;
-            this.pictureBox1.TabStop = false;
             // 
             // label2
             // 
@@ -318,6 +306,18 @@
             this.label7.Text = "Путь для сохранения";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pictureBox1.Image = global::gmj2book.Resource2.logo;
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Padding = new System.Windows.Forms.Padding(0, 25, 0, 0);
+            this.pictureBox1.Size = new System.Drawing.Size(404, 88);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox1.TabIndex = 2;
+            this.pictureBox1.TabStop = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
@@ -348,7 +348,7 @@
             this.MinimumSize = new System.Drawing.Size(420, 440);
             this.Name = "MainForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-            this.Text = "app1d";
+            this.Text = "gmj2book";
             this.Load += new System.EventHandler(this.MainFormLoad);
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -356,5 +356,5 @@
             this.PerformLayout();
 
 		}
-	}
+    }
 }

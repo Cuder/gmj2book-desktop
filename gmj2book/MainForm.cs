@@ -21,24 +21,35 @@ namespace gmj2book
         private void TextBox1TextChanged(object sender, EventArgs e)
 		{
             // Сброс сохраненных ранее сообщений об ошибках
-		    errorProvider1.Clear();
+            errorProvider1.Clear();
 		    ClearErrorProvider(blogName);
 		    ClearErrorProvider(coauthorName);
+
+            // Изменение текста нажатой кнопки
+		    launch.Text = @"Проверка введенных данных...";
+            launch.Enabled = false;
 
             // Инициализация нового задания
             var t = new Task
 		    {
 		        Errors = new List<string[]>(),
 		        BlogName = blogName.Text,
+                BlogId = 0,
+		        CoauthorId = 0,
                 CoauthorName = coauthorName.Text
 		    };
             // Отображение ошибок, если есть
 			DisplayErrors(t.Errors);
-		}
+
+            // Возврат данных кнопки
+		    launch.Text = @"Запустить";
+            launch.Enabled = true;
+        }
 
         // Функция для всплывающих подсказок
 	    private void ToolTip1Popup(object sender, PopupEventArgs e) {}
 
+        // Отображение всех ошибок ввода данных
 	    private void DisplayErrors(IReadOnlyCollection<string[]> errors)
 	    {
 	        if (errors.Count == 0) return;
@@ -48,6 +59,7 @@ namespace gmj2book
 	        }
 	    }
 
+        // Отображение конкретной ошибки ввода данных
 	    private void DisplayError(string error, string param)
 		{
 			switch (param)
@@ -61,21 +73,23 @@ namespace gmj2book
 			}
 		}
 
+        // Действия по нажатию на кнопку "..."
 	    private void Button1Click(object sender, EventArgs e)
 		{
 		    var fbd = new FolderBrowserDialog
 		    {
 		        RootFolder = Environment.SpecialFolder.MyComputer,
-		        Description = "Выберите путь для сохранения готовой книги."
+		        Description = @"Выберите путь для сохранения готовой книги."
 		    };
 		    if (fbd.ShowDialog() == DialogResult.OK)
 				filePath.Text = fbd.SelectedPath;
 		}
 
+        // Очистка данных об ошибках
 	    private void ClearErrorProvider(Control name)
 	    {
 	        errorProvider1.SetIconPadding(name, 7);
 	        errorProvider1.SetError(name, "");
         }
-	}
+    }
 }

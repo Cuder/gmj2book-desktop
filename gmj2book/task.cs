@@ -10,8 +10,8 @@ namespace gmj2book
 		{
 			get => _blogName;
 		    set {
-				// Проверка имени пользователя
-				if (CheckInput.IsNull(value))
+                // Проверка имени пользователя
+                if (CheckInput.IsNull(value))
 				{
 					AddError("Введите название блога", "blogName");
 				}
@@ -31,22 +31,46 @@ namespace gmj2book
 				{
 				    AddError("Этот блог в списке общих. Введите название частного блога", "blogName");
 				}
+		        if (BlogId == 0 && Errors.Count == 0) GetBlogId(value); // Получение идентификатора блога
+                if (BlogId == 0)
+				{
+				    AddError("Блог не найден.", "blogName");
+				}
                 if (Errors.Count == 0)
 				{
 					_blogName = value;
 				}
 			}
 		}
-        //ushort blog_id;
-	    private string _coauthorName; // имя соавтора блога
+
+	    public ushort BlogId { get; set; } // идентификатор автора блога
+
+        private void GetBlogId(string username, bool coauthor = false)
+        {
+            var id = Parser.GetBlogId(Gmj.GetFirstPage(username));
+            if (coauthor)
+            {
+                CoauthorId = id;
+            }
+            else
+            {
+                BlogId = id;
+            }
+        }
+
+        private string _coauthorName; // имя соавтора блога
 	    public string CoauthorName
 	    {
 	        get => _coauthorName;
 	        set
 	        {
 	            if (CheckInput.IsNull(value)) return;
-	            // Проверка имени соавтора блога
-	            if (CheckInput.StartsWithDigit(value))
+                // Проверка имени соавтора блога
+	            if (value == BlogName)
+	            {
+	                AddError("Введите имя, отличное от основного имени блога", "coauthorName");
+	            }
+                else if (CheckInput.StartsWithDigit(value))
 	            {
 	                AddError("Название блога не может начинаться на цифру", "coauthorName");
 	            }
@@ -58,13 +82,20 @@ namespace gmj2book
 	            {
 	                AddError("Название блога не может содержать одновременно и латинские, и кириллические буквы", "coauthorName");
 	            }
-	            if (Errors.Count == 0)
+                if (CoauthorId == 0 && Errors.Count == 0) GetBlogId(value, true); // Получение идентификатора блога
+	            if (CoauthorId == 0)
+	            {
+	                AddError("Блог не найден.", "coauthorName");
+                }
+                if (Errors.Count == 0)
 	            {
 	                _coauthorName = value;
 	            }
 	        }
 	    }
         //ushort coauthor_id;
+	    public ushort CoauthorId { get; set; } // идентификатор соавтора блога
+
         //string real_name;
         //string real_surname;
         //bool include_images=true;
