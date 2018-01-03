@@ -19,5 +19,11 @@ namespace gmj2book
         {
             return doc.DocumentNode.SelectSingleNode("//span[@id='ctl00_cph1_lblError']") != null;
         }
+
+        // Получение таблицы с постами блога
+        public static HtmlNode GetPostsTable(HtmlDocument doc)
+        {
+            return doc.DocumentNode.SelectSingleNode("//table[@class='BlogDG']");
+        }
     }
 }

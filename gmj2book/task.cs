@@ -44,6 +44,10 @@ namespace gmj2book
                 {
                     AddError("Блог закрыт для общего доступа. Пока мы можем создавать книжки только для открытых блогов", "blogName");
                 }
+                else if (Parser.GetPostsTable(FirstPage) == null)
+                {
+                    AddError("В блоге нет записей", "blogName");
+                }
                 if (errorsCountAuthor == 0)
 				{
 					_blogName = value;

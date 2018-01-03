@@ -27,7 +27,6 @@ namespace gmj2book
             }
             catch (HttpRequestException webExcp)
             {
-                // Console.WriteLine(webExcp.Message);
                 MessageBox.Show(webExcp.Message);
                 return null;
             }
@@ -38,7 +37,6 @@ namespace gmj2book
             }
             catch (WebException webExcp)
             {
-                // Console.WriteLine(webExcp.Message);
                 MessageBox.Show(webExcp.Message);
                 return null;
             }
