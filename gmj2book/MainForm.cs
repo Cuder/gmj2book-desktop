@@ -36,8 +36,10 @@ namespace gmj2book
 		        BlogName = blogName.Text,
                 BlogId = 0,
 		        CoauthorId = 0,
-                CoauthorName = coauthorName.Text
-		    };
+                CoauthorName = coauthorName.Text,
+		        FirstPage = null,
+		        FirstPageCoauthor = null
+            };
             // Отображение ошибок, если есть
 			DisplayErrors(t.Errors);
 

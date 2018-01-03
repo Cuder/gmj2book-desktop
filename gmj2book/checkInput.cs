@@ -62,8 +62,6 @@ namespace gmj2book
             };
 	        return publicBlogs.Contains(str.ToLower());
 	    }
-        // Существует ли блог с таким именем
-	    // Открыт ли блог автора для чтения
         // Не пустой ли блог автора
 	}
 }

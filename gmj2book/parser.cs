@@ -10,12 +10,14 @@ namespace gmj2book
         {
             var action = doc.DocumentNode.SelectSingleNode("//form[@id='aspnetForm']").Attributes["action"].Value;
             var blogId = action.Substring(action.LastIndexOf('=') + 1);
-            if (blogId == action)
-            {
-                // Блог с таким именем не найден
-                blogId = "0";
-            }
+            if (blogId == action) blogId = "0"; // Блог с таким именем не найден
             return Convert.ToUInt16(blogId);
+        }
+
+        // Проверка на закрытость блога
+        public static bool IfBlogClosed(HtmlDocument doc)
+        {
+            return doc.DocumentNode.SelectSingleNode("//span[@id='ctl00_cph1_lblError']") != null;
         }
     }
 }

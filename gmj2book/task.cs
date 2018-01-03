@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using HtmlAgilityPack;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace gmj2book
 {
@@ -31,12 +33,18 @@ namespace gmj2book
 				{
 				    AddError("Этот блог в списке общих. Введите название частного блога", "blogName");
 				}
-		        if (BlogId == 0 && Errors.Count == 0) GetBlogId(value); // Получение идентификатора блога
+		        var errorsCountAuthor = Errors.Count(s => s.Contains("blogName"));
+                if (FirstPage == null && errorsCountAuthor == 0) GetFirstPage(value); // Получение первой страницы блога
+                if (BlogId == 0 && errorsCountAuthor == 0) GetBlogId(); // Получение идентификатора блога
                 if (BlogId == 0)
 				{
-				    AddError("Блог не найден.", "blogName");
-				}
-                if (Errors.Count == 0)
+				    AddError("Блог не найден", "blogName");
+				}   
+                else if (Parser.IfBlogClosed(FirstPage))
+                {
+                    AddError("Блог закрыт для общего доступа. Пока мы можем создавать книжки только для открытых блогов", "blogName");
+                }
+                if (errorsCountAuthor == 0)
 				{
 					_blogName = value;
 				}
@@ -45,17 +53,12 @@ namespace gmj2book
 
 	    public ushort BlogId { get; set; } // идентификатор автора блога
 
-        private void GetBlogId(string username, bool coauthor = false)
+        private void GetBlogId(bool coauthor = false)
         {
-            var id = Parser.GetBlogId(Gmj.GetFirstPage(username));
             if (coauthor)
-            {
-                CoauthorId = id;
-            }
+                CoauthorId = Parser.GetBlogId(FirstPageCoauthor);
             else
-            {
-                BlogId = id;
-            }
+                BlogId = Parser.GetBlogId(FirstPage);
         }
 
         private string _coauthorName; // имя соавтора блога
@@ -82,12 +85,14 @@ namespace gmj2book
 	            {
 	                AddError("Название блога не может содержать одновременно и латинские, и кириллические буквы", "coauthorName");
 	            }
-                if (CoauthorId == 0 && Errors.Count == 0) GetBlogId(value, true); // Получение идентификатора блога
+	            var errorsCountCoauthor = Errors.Count(s => s.Contains("coauthorName"));
+                if (FirstPageCoauthor == null && errorsCountCoauthor == 0) GetFirstPage(value, true); // Получение первой страницы блога
+                if (CoauthorId == 0 && errorsCountCoauthor == 0) GetBlogId(true); // Получение идентификатора блога
 	            if (CoauthorId == 0)
 	            {
-	                AddError("Блог не найден.", "coauthorName");
+	                AddError("Блог не найден", "coauthorName");
                 }
-                if (Errors.Count == 0)
+                if (errorsCountCoauthor == 0)
 	            {
 	                _coauthorName = value;
 	            }
@@ -100,7 +105,20 @@ namespace gmj2book
         //string real_surname;
         //bool include_images=true;
         //string book_path;
-        //string first_page; // Yet unknown type
+
+        public HtmlDocument FirstPage { get; set; } // Первая страница блога автора
+
+	    public HtmlDocument FirstPageCoauthor { get; set; } // Первая страница блога соавтора
+
+        private void GetFirstPage(string username, bool coauthor = false)
+        {
+            var firstPageHtml = Gmj.GetFirstPage(username);
+            if (coauthor)
+                FirstPageCoauthor = firstPageHtml;
+            else
+                FirstPage = firstPageHtml;
+        }
+
         public List<string[]> Errors { get; set; } = new List<string[]>();
 
 	    private void AddError(string errorText, string param)
