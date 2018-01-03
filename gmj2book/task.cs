@@ -11,49 +11,67 @@ namespace gmj2book
 		public string BlogName
 		{
 			get => _blogName;
-		    set {
-                // Проверка имени пользователя
-                if (CheckInput.IsNull(value))
-				{
-					AddError("Введите название блога", "blogName");
-				}
-				else if (CheckInput.StartsWithDigit(value))
-				{
-				    AddError("Название блога не может начинаться на цифру", "blogName");
-				}
-				else if (CheckInput.ContainsForbiddenChars(value))
-				{
-				    AddError("Название блога содержит недопустимые символы", "blogName");
-				}
-				else if (CheckInput.CyrLatinCharacters(value))
-				{
-				    AddError("Название блога не может содержать одновременно и латинские, и кириллические буквы", "blogName");
-				}
-				else if (CheckInput.IsPublic(value))
-				{
-				    AddError("Этот блог в списке общих. Введите название частного блога", "blogName");
-				}
-		        var errorsCountAuthor = Errors.Count(s => s.Contains("blogName"));
-                if (FirstPage == null && errorsCountAuthor == 0) GetFirstPage(value); // Получение первой страницы блога
-                if (BlogId == 0 && errorsCountAuthor == 0) GetBlogId(); // Получение идентификатора блога
-                if (BlogId == 0)
-				{
-				    AddError("Блог не найден", "blogName");
-				}   
-                else if (Parser.IfBlogClosed(FirstPage))
+		    set { if (AddBlogNameErrors(value) == 0) _blogName = value; }
+		}
+
+	    // Проверка имени пользователя
+        private int AddBlogNameErrors(string username, bool coauthor = false)
+        {
+	        var param = coauthor ? "coauthorName" : "blogName";
+
+            // Локальная проверка имени
+            if (!coauthor && CheckInput.IsNull(username))
+	        {
+	            AddError("Введите название блога", param);
+	        }
+            else if (coauthor && username == BlogName)
+            {
+                AddError("Введите имя, отличное от основного имени блога", param);
+            }
+            else if (CheckInput.StartsWithDigit(username))
+	        {
+	            AddError("Название блога не может начинаться на цифру", param);
+	        }
+	        else if (CheckInput.ContainsForbiddenChars(username))
+	        {
+	            AddError("Название блога содержит недопустимые символы", param);
+	        }
+	        else if (CheckInput.CyrLatinCharacters(username))
+	        {
+	            AddError("Название блога не может содержать одновременно и латинские, и кириллические буквы", param);
+	        }
+	        else if (!coauthor && CheckInput.IsPublic(username))
+	        {
+	            AddError("Этот блог в списке общих. Введите название частного блога", param);
+	        }
+
+            var errorCount = Errors.Count(s => s.Contains(param));
+            if (errorCount != 0) return errorCount;
+
+            // Получение первой страницы блога и идентификатора блога
+            GetFirstPage(username, coauthor); 
+            GetBlogId(coauthor);
+
+            // Проверка имени с использованием парсера
+            if (!coauthor && BlogId == 0 || coauthor && CoauthorId == 0)
+            {
+                AddError("Блог не найден", param);
+            }
+            else if (!coauthor)
+            {
+                if (Parser.IfBlogClosed(FirstPage))
                 {
-                    AddError("Блог закрыт для общего доступа. Пока мы можем создавать книжки только для открытых блогов", "blogName");
+                    AddError("Блог закрыт для общего доступа. Пока мы можем создавать книжки только для открытых блогов", param);
                 }
                 else if (Parser.GetPostsTable(FirstPage) == null)
                 {
-                    AddError("В блоге нет записей", "blogName");
+                    AddError("В блоге нет записей", param);
                 }
-                if (errorsCountAuthor == 0)
-				{
-					_blogName = value;
-				}
-			}
-		}
+            }
+
+            // Возврат количества ошибок
+            return Errors.Count(s => s.Contains(param));
+	    }
 
 	    public ushort BlogId { get; set; } // идентификатор автора блога
 
@@ -66,40 +84,14 @@ namespace gmj2book
         }
 
         private string _coauthorName; // имя соавтора блога
+
 	    public string CoauthorName
 	    {
 	        get => _coauthorName;
 	        set
 	        {
 	            if (CheckInput.IsNull(value)) return;
-                // Проверка имени соавтора блога
-	            if (value == BlogName)
-	            {
-	                AddError("Введите имя, отличное от основного имени блога", "coauthorName");
-	            }
-                else if (CheckInput.StartsWithDigit(value))
-	            {
-	                AddError("Название блога не может начинаться на цифру", "coauthorName");
-	            }
-	            else if (CheckInput.ContainsForbiddenChars(value))
-	            {
-	                AddError("Название блога содержит недопустимые символы", "coauthorName");
-	            }
-	            else if (CheckInput.CyrLatinCharacters(value))
-	            {
-	                AddError("Название блога не может содержать одновременно и латинские, и кириллические буквы", "coauthorName");
-	            }
-	            var errorsCountCoauthor = Errors.Count(s => s.Contains("coauthorName"));
-                if (FirstPageCoauthor == null && errorsCountCoauthor == 0) GetFirstPage(value, true); // Получение первой страницы блога
-                if (CoauthorId == 0 && errorsCountCoauthor == 0) GetBlogId(true); // Получение идентификатора блога
-	            if (CoauthorId == 0)
-	            {
-	                AddError("Блог не найден", "coauthorName");
-                }
-                if (errorsCountCoauthor == 0)
-	            {
-	                _coauthorName = value;
-	            }
+	            if (AddBlogNameErrors(value, true) == 0) _coauthorName = value;
 	        }
 	    }
         //ushort coauthor_id;

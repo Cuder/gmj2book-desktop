@@ -158,8 +158,7 @@
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(104, 24);
             this.checkBox1.TabIndex = 13;
-            this.toolTip1.SetToolTip(this.checkBox1, "Включать в книгу изображения, прикрепленные к сообщениям? Это может существенно у" +
-        "величить размер готовой книги.");
+            this.toolTip1.SetToolTip(this.checkBox1, "Включать в книгу изображения, прикрепленные к сообщениям?\nЭто может существенно увеличить размер готовой книги");
             this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // filePath
@@ -167,7 +166,7 @@
             this.filePath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.filePath.ForeColor = System.Drawing.SystemColors.WindowText;
             this.filePath.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.filePath.Location = new System.Drawing.Point(179, 305);
+            this.filePath.Location = new System.Drawing.Point(182, 305);
             this.filePath.MaxLength = 20;
             this.filePath.Name = "filePath";
             this.filePath.ReadOnly = true;
