@@ -94,7 +94,7 @@ namespace gmj2book
 	            if (AddBlogNameErrors(value, true) == 0) _coauthorName = value;
 	        }
 	    }
-        //ushort coauthor_id;
+
 	    public ushort CoauthorId { get; set; } // идентификатор соавтора блога
 
         //string real_name;

@@ -35,13 +35,19 @@ namespace gmj2book
 		        Errors = new List<string[]>(),
 		        BlogName = blogName.Text,
                 BlogId = 0,
-		        CoauthorId = 0,
                 CoauthorName = coauthorName.Text,
-		        FirstPage = null,
+		        CoauthorId = 0,
+                FirstPage = null,
 		        FirstPageCoauthor = null
             };
-            // Отображение ошибок, если есть
+
+            // Отображение ошибок ввода данных, если есть
 			DisplayErrors(t.Errors);
+
+            // Создание FB2 книги
+		    launch.Text = @"Создание книги..."; // Изменение текста нажатой кнопки
+            var b = new Fb2();
+            b.SaveFb2();
 
             // Возврат данных кнопки
 		    launch.Text = @"Запустить";
