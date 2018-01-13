@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Xml.Linq;
 using System.IO;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace gmj2book
 {
     public class Fb2
     {
+        private static readonly CultureInfo Culture = CultureInfo.ReadOnly(new CultureInfo("ru"));
         private static readonly DateTime CurrentTime = DateTime.UtcNow.Date;
         private static readonly XNamespace Ns = "http://www.gribuser.ru/xml/fictionbook/2.0";
         private const string ProgramSite = "http://nikitakovin.ru/gmj2book/";
@@ -92,13 +94,28 @@ namespace gmj2book
 
         private static XElement RootSection { get; set; }
 
-        private static XElement WriteYear(int yr)
+        private static XElement WriteYear(int year)
         {
-            var year = new XElement(Ns + "section",
+            var yearNode = new XElement(Ns + "section",
                 new XElement(Ns + "title",
-                    new XElement(Ns + "p", yr)));
-            RootSection.Add(year);
-            return year;
+                    new XElement(Ns + "p", year)));
+            RootSection.Element(Ns + "annotation")?.AddAfterSelf(yearNode);
+            return yearNode;
+        }
+
+        private static XElement WriteMonth(XContainer year, int month)
+        {
+            var monthNode = new XElement(Ns + "section",
+                new XElement(Ns + "title",
+                    new XElement(Ns + "p", Culture.DateTimeFormat.GetMonthName(month))));
+            year.Element(Ns + "title")?.AddAfterSelf(monthNode);
+            return monthNode;
+        }
+
+        private static void WritePost(XContainer monthNode, Post p)
+        {
+            var postTime = new XElement(Ns + "subtitle", p.Time.ToString("dd MMMM, dddd. H:mm", Culture), new XAttribute("id", p.Id));
+            monthNode.Element(Ns + "title")?.AddAfterSelf(postTime);
         }
 
         private static void WritePosts(Task t)
@@ -106,14 +123,13 @@ namespace gmj2book
             var stopParsing = false;
             // Счетчики
             var pagesCounter = 0;
-            var postsCounter = 0;
-            var imagesCounter = 0;
+            //var postsCounter = 0;
+            //var imagesCounter = 0;
             // Регуляторы записи годов и месяцев
             var yearWritten = 0;
             var monthWritten = 0;
-            // var sectionYear = None;
-            // var sectionMonth = None;
-            // var posts_month = [];
+            XElement yearNode = null;
+            XElement monthNode = null;
 
             while (true)
             {
@@ -129,51 +145,60 @@ namespace gmj2book
                     blogPage.LoadHtml(html);
                     posts = Parser.GetPostsTable(blogPage);
                 }
-                if (posts != null)
-                {
-                    // Запись постов со страницы
-                    var range = Enumerable.Range(0, 10);
-                    foreach (var postNumber in range)
-                    {
-                        // Получить пост и информацию о нем
-                        var postData = Parser.GetPostData(posts, postNumber);
-                        if (postData != null)
-                        {
-                            var p = new Post
-                            {
-                                Id = Parser.GetPostId(postData),
-                                Author = Parser.GetPostAuthor(postData),
-                                Title = Parser.GetPostTitle(postData),
-                                Time = Parser.GetPostDateTime(postData),
-                                Message = "",
-                                HasImage = true
-                            };
-                            MessageBox.Show(p.Time.ToString("yy hh:mm"));
-                        }
-                        else
-                        {
-                            // Посты закончились, нужно остановить дальнейший парсинг
-                            stopParsing = true;
-                            MessageBox.Show($@"Parsing stopped");
-                            break;
-                        }
-                    }
 
-                    if (stopParsing)
-                    {
-                        // Запись постов за последний месяц последнего года
-                        break;
-                    }
-                    else
-                    {
-                        
-                    }
-                }
-                else
+                if (posts == null)
                 {
                     // Запись постов за последний месяц последнего года
+                    break;
                 }
-                //break;
+
+                // Запись постов со страницы
+                var range = Enumerable.Range(0, 10);
+                foreach (var postNumber in range)
+                {
+                    // Получить пост и информацию о нем
+                    var postData = Parser.GetPostData(posts, postNumber);
+                    if (postData == null)
+                    {
+                        // Посты закончились, нужно остановить дальнейший парсинг
+                        stopParsing = true;
+                        MessageBox.Show(@"Parsing stopped");
+                        break;
+                    }
+
+                    // Проверка автора
+                    var postAuthor = Parser.GetPostAuthor(postData);
+                    if (postAuthor != t.BlogId && postAuthor != t.CoauthorId) continue;
+
+                    // Обработка поста
+                    var p = new Post
+                    {
+                        Id = Parser.GetPostId(postData),
+                        Author = postAuthor,
+                        Title = Parser.GetPostTitle(postData),
+                        Time = Parser.GetPostDateTime(postData),
+                        HasImage = Parser.HasImage(postData),
+                        Message = Parser.GetPostMessage()
+                    };
+
+                    if (p.Time.Year != yearWritten)
+                    {
+                        yearNode = WriteYear(p.Time.Year);
+                        yearWritten = p.Time.Year;
+                    }
+
+                    if (p.Time.Month != monthWritten || p.Time.Month == monthWritten && p.Time.Year != yearWritten)
+                    {
+                        monthNode = WriteMonth(yearNode, p.Time.Month);
+                        monthWritten = p.Time.Month;
+                    }
+
+                    WritePost(monthNode, p);
+                    // MessageBox.Show(p.HasImage.ToString());
+                }
+
+                if (stopParsing) break;
+                pagesCounter += 1;
             }
         }
 

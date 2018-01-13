@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Globalization;
 using System.Text.RegularExpressions;
-using System.Web;
-using System.Windows.Forms;
 using HtmlAgilityPack;
 using HtmlDocument = HtmlAgilityPack.HtmlDocument;
 
@@ -10,7 +7,7 @@ namespace gmj2book
 {
     public static class Parser
     {
-        // Получение ID блога из его страницы
+        // Получить ID блога из его страницы
         public static ushort GetBlogId(HtmlDocument doc)
         {
             var action = doc.DocumentNode.SelectSingleNode("//form[@id='aspnetForm']").Attributes["action"].Value;
@@ -19,7 +16,7 @@ namespace gmj2book
             return Convert.ToUInt16(blogId);
         }
 
-        // Получение имени блога из его страницы
+        // Получить имя блога из его страницы
         public static string GetBlogName(HtmlDocument doc)
         {
             var title = doc.DocumentNode.SelectSingleNode("//title").InnerText;
@@ -27,7 +24,7 @@ namespace gmj2book
             return reg.Matches(title)[0].Groups[1].ToString();
         }
 
-        // Проверка на закрытость блога
+        // Проверить на закрытость блога
         public static bool IfBlogClosed(HtmlDocument doc)
         {
             return doc.DocumentNode.SelectSingleNode("//span[@id='ctl00_cph1_lblError']") != null;
@@ -82,8 +79,23 @@ namespace gmj2book
             return Gmj.FormatTime(time);
         }
 
-        // Получить сообщение поста
+        private static HtmlNode PostMessageNode { get; set; }
 
         // Получить информацию о наличии картинки в посте
+        public static bool HasImage(HtmlNode postData)
+        {
+            PostMessageNode = postData.SelectSingleNode(".//td[@colspan='2']");
+            var postAttachmentNode = PostMessageNode.SelectSingleNode(".//div[@class='att']");
+            if (postAttachmentNode == null) return false;
+            var image = postAttachmentNode.SelectSingleNode(".//img");
+            postAttachmentNode.Remove();
+            return image != null;
+        }
+
+        // Получить сообщение поста
+        public static string GetPostMessage()
+        {
+            return PostMessageNode.InnerText;
+        }
     }
 }
