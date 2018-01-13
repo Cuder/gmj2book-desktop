@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace gmj2book
 {
@@ -24,9 +25,11 @@ namespace gmj2book
             errorProvider1.Clear();
 		    ClearErrorProvider(blogName);
 		    ClearErrorProvider(coauthorName);
+		    ClearErrorProvider(realName);
+		    ClearErrorProvider(realSurname);
 
             // Изменение текста нажатой кнопки
-		    launch.Text = @"Проверка введенных данных...";
+            launch.Text = @"Проверка введенных данных...";
             launch.Enabled = false;
 
             // Инициализация нового задания
@@ -34,20 +37,21 @@ namespace gmj2book
 		    {
 		        Errors = new List<string[]>(),
 		        BlogName = blogName.Text,
-                BlogId = 0,
                 CoauthorName = coauthorName.Text,
-		        CoauthorId = 0,
-                FirstPage = null,
-		        FirstPageCoauthor = null
+                RealName = realName.Text,
+                RealSurname = realSurname.Text
             };
 
             // Отображение ошибок ввода данных, если есть
 			DisplayErrors(t.Errors);
 
             // Создание FB2 книги
-		    launch.Text = @"Создание книги..."; // Изменение текста нажатой кнопки
-            var b = new Fb2();
-            b.SaveFb2();
+		    if (t.Errors.Count == 0)
+		    {
+                launch.Text = @"Создание книги..."; // Изменение текста нажатой кнопки
+		        var b = new Fb2();
+                b.SaveFb2(t);
+            }
 
             // Возврат данных кнопки
 		    launch.Text = @"Запустить";
@@ -78,7 +82,13 @@ namespace gmj2book
 				case "coauthorName":
 				    errorProvider1.SetError(coauthorName, error);
                     break;
-			}
+			    case "realName":
+			        errorProvider1.SetError(realName, error);
+			        break;
+			    case "realSurname":
+			        errorProvider1.SetError(realSurname, error);
+			        break;
+            }
 		}
 
         // Действия по нажатию на кнопку "..."

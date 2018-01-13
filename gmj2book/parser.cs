@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using HtmlAgilityPack;
+using HtmlDocument = HtmlAgilityPack.HtmlDocument;
 
 namespace gmj2book
 {
@@ -12,6 +16,14 @@ namespace gmj2book
             var blogId = action.Substring(action.LastIndexOf('=') + 1);
             if (blogId == action) blogId = "0"; // Блог с таким именем не найден
             return Convert.ToUInt16(blogId);
+        }
+
+        // Получение имени блога из его страницы
+        public static string GetBlogName(HtmlDocument doc)
+        {
+            var title = doc.DocumentNode.SelectSingleNode("//title").InnerText;
+            var reg = new Regex("&quot;(.*)&quot;");
+            return reg.Matches(title)[0].Groups[1].ToString();
         }
 
         // Проверка на закрытость блога

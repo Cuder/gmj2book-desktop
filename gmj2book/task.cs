@@ -1,6 +1,7 @@
-﻿using HtmlAgilityPack;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
+using HtmlDocument = HtmlAgilityPack.HtmlDocument;
 
 namespace gmj2book
 {
@@ -11,8 +12,8 @@ namespace gmj2book
 		public string BlogName
 		{
 			get => _blogName;
-		    set { if (AddBlogNameErrors(value) == 0) _blogName = value; }
-		}
+		    set { if (AddBlogNameErrors(value) == 0) _blogName = Parser.GetBlogName(FirstPage); }
+        }
 
 	    // Проверка имени пользователя
         private int AddBlogNameErrors(string username, bool coauthor = false)
@@ -73,14 +74,32 @@ namespace gmj2book
             return Errors.Count(s => s.Contains(param));
 	    }
 
-	    public ushort BlogId { get; set; } // идентификатор автора блога
+	    private int AddRealNamesErrors(string name, bool surname = false)
+	    {
+	        var param = surname ? "realSurname" : "realName";
 
-        private void GetBlogId(bool coauthor = false)
-        {
-            if (coauthor)
-                CoauthorId = Parser.GetBlogId(FirstPageCoauthor);
-            else
-                BlogId = Parser.GetBlogId(FirstPage);
+	        if (CheckInput.ContainsForbiddenChars(name, true))
+	        {
+	            AddError("Может содержать только буквы и дефис", param);
+	        }
+
+            // Возврат количества ошибок
+            return Errors.Count(s => s.Contains(param));
+        }
+
+        public ushort BlogId { get; set; } // идентификатор автора блога
+
+	    private void GetBlogId(bool coauthor = false)
+	    {
+	        if (coauthor)
+	        {
+	            CoauthorId = Parser.GetBlogId(FirstPageCoauthor);
+	        }
+	        else
+	        {
+	            BlogId = Parser.GetBlogId(FirstPage);
+	            BlogUrl = "http://my.gmj.ru/Blog/Blog.aspx?bid=" + BlogId;
+	        }
         }
 
         private string _coauthorName; // имя соавтора блога
@@ -97,8 +116,28 @@ namespace gmj2book
 
 	    public ushort CoauthorId { get; set; } // идентификатор соавтора блога
 
-        //string real_name;
-        //string real_surname;
+	    private string _realName;
+        public string RealName
+	    {
+	        get => _realName;
+	        set
+	        {
+	            if (CheckInput.IsNull(value)) return;
+	            if (AddRealNamesErrors(value) == 0) _realName = value;
+	        }
+	    }
+
+	    private string _realSurname;
+	    public string RealSurname
+	    {
+	        get => _realSurname;
+	        set
+	        {
+	            if (CheckInput.IsNull(value)) return;
+	            if (AddRealNamesErrors(value, true) == 0) _realSurname = value;
+	        }
+	    }
+
         //bool include_images=true;
         //string book_path;
 
@@ -114,6 +153,8 @@ namespace gmj2book
             else
                 FirstPage = firstPageHtml;
         }
+
+        public string BlogUrl { get; set; } // полная ссылка на блог автора
 
         public List<string[]> Errors { get; set; } = new List<string[]>();
 

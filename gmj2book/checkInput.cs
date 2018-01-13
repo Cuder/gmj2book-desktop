@@ -18,13 +18,24 @@ namespace gmj2book
          -- дефис;
          -- знак равенства;
          -- знак подчеркивания;
-         -- точку. */
-	    public static bool ContainsForbiddenChars(string str)
-		{
-			var regexItem = new Regex("^[а-яА-ЯA-Za-z0-9 \\-=_.]*$");
-			return !regexItem.IsMatch(str);
+         -- точку. 
+         Имя и фамилия автора могут содержать только буквы */
+	    public static bool ContainsForbiddenChars(string str, bool real = false)
+	    {
+	        // var regexItem = new Regex();
+            if (real)
+		    {
+		        var regexItem = new Regex("^[а-яА-ЯA-Za-z-]*$");
+		        return !regexItem.IsMatch(str);
+            }
+		    else
+		    {
+		        var regexItem = new Regex("^[а-яА-ЯA-Za-z0-9 \\-=_.]*$");
+		        return !regexItem.IsMatch(str);
+            }
 		}
-        // Начинается ли имя блога на цифру
+        
+	    // Начинается ли имя блога на цифру
 	    public static bool StartsWithDigit(string str)
 		{
 			var c = str[0];
