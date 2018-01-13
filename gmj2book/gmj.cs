@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows.Forms;
 using HtmlDocument = HtmlAgilityPack.HtmlDocument;
 
@@ -16,7 +18,7 @@ namespace gmj2book
         private static readonly HtmlDocument Document = new HtmlDocument();
 
         // Получение строки с HTML
-        private static async Task<string> GetHtml(Dictionary<string, string> values, string url = "http://my.gmj.ru")
+        public static async Task<string> GetHtml(Dictionary<string, string> values, string url = "http://my.gmj.ru")
         {
             if (values == null) values = new Dictionary<string, string>();
             var content = new FormUrlEncodedContent(values);
@@ -74,6 +76,38 @@ namespace gmj2book
             // Преобразование строки HTML в тип HtmlDocument
             Document.LoadHtml(firstPage);
             return Document;
+        }
+
+        // Получить ID поста (type=rid) или автора поста (type=bid) из ссылки
+        public static string GetId(Uri href, string type = "rid")
+        {
+            return HttpUtility.ParseQueryString(href.Query).Get(type);
+        }
+
+        // Преобразовать строку времени в формат DateTime
+        public static DateTime FormatTime(string time)
+        {
+            var months = new Dictionary<string, string>
+            {
+                {" янв ", " 01 "},
+                {" фев ", " 02 "},
+                {" мар ", " 03 "},
+                {" апр ", " 04 "},
+                {" май ", " 05 "},
+                {" июн ", " 06 "},
+                {" июл ", " 07 "},
+                {" авг ", " 08 "},
+                {" сен ", " 09 "},
+                {" окт ", " 10 "},
+                {" ноя ", " 11 "},
+                {" дек ", " 12 "}
+            };
+            foreach (var pair in months)
+            {
+                if (!time.Contains(pair.Key)) continue;
+                time = time.Replace(pair.Key, pair.Value);
+            }
+            return DateTime.ParseExact(time, "d MM yyyy, H:mm", null);
         }
     }
 }

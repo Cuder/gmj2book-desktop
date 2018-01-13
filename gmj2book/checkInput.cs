@@ -22,7 +22,6 @@ namespace gmj2book
          Имя и фамилия автора могут содержать только буквы */
 	    public static bool ContainsForbiddenChars(string str, bool real = false)
 	    {
-	        // var regexItem = new Regex();
             if (real)
 		    {
 		        var regexItem = new Regex("^[а-яА-ЯA-Za-z-]*$");
@@ -33,8 +32,7 @@ namespace gmj2book
 		        var regexItem = new Regex("^[а-яА-ЯA-Za-z0-9 \\-=_.]*$");
 		        return !regexItem.IsMatch(str);
             }
-		}
-        
+		}  
 	    // Начинается ли имя блога на цифру
 	    public static bool StartsWithDigit(string str)
 		{
@@ -73,6 +71,12 @@ namespace gmj2book
             };
 	        return publicBlogs.Contains(str.ToLower());
 	    }
+        // Содержит ли заголовок поста только спецсимволы
+	    public static bool IsAlphanumericOnly(string str)
+	    {
+	        var rgx = new Regex("[^а-яА-Яa-zA-Z0-9]");
+	        return rgx.Replace(str, "") != "";
+        }
 	}
 }
 
